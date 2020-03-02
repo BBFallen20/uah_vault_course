@@ -3,31 +3,42 @@ from request import get_html
 from saver import save
 import os, time
 
-user = input('Введите имя пользователя ПК:\n')
 URL = 'https://finance.ua/ru/currency'
-PATH = 'C:/Users/'+user+'/Desktop/vaults.csv'
 
-def parse():
+def save_file(vaults, path):
+    try:
+        save(vaults, path)
+        os.startfile(path)
+        print('=' * 50)
+        print('[+]Info saved to your desktop.')
+        print('=' * 50)
+    except Exception:
+        print("Error with saving.Try to re-enter username.")
+
+
+def parse(mode):
     html = get_html(URL)
     if html.status_code == 200:
         print('='*50)
-        print('[+]Соединение установлено.')
+        print('[+]Connected.')
         print('=' * 50)
-        print('Курс валют получен.')
-        print("Записываю в файл.")
+        print('Vault course has been taken.')
         vaults = content(html.text)
-        try:
-            save(vaults, PATH)
-            os.startfile(PATH)
-            print('=' * 50)
-            print('[+]Информация сохранена на рабочий стол.')
-            print('=' * 50)
+        if mode == '1':
+            user = input('Enter PC username:\n')
+            PATH = 'C:/Users/' + user + '/Desktop/vaults.csv'
+            save_file(vaults, PATH)
             time.sleep(1.5)
-        except:
-            print("Неверно введено имя пользователя.")
+        elif mode == '2':
+            print('=' * 50)
+            print('[V]Results:')
+            print('=' * 50)
+            for item in vaults:
+                print([item['name'], item['buy'], item['sell']])
+            time.sleep(1.5)
     else:
         print('=' * 50)
-        print('[-]Ошибка.')
+        print('[-]Error with connection.')
         print('=' * 50)
 
 def content(html):
@@ -44,4 +55,20 @@ def content(html):
     lenght = int(lenght/2)
     return vaults[:lenght]
 
-parse()
+print("="*50)
+print("\t\t\tUAH course parser v2.0")
+print("="*50)
+while True:
+    mode = input('''Choose what to do:
+1.Save result to desktop.
+2.Show result to the console.
+3.Exit.\n''')
+    if mode == '1':
+        parse(mode)
+    elif mode == '2':
+        parse(mode)
+    elif mode == '3':
+        exit()
+    else:
+        print("Unknown command.")
+        continue
