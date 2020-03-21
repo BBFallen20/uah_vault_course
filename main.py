@@ -34,7 +34,7 @@ def parse(mode):
             print('[V]Results:')
             print('=' * 50)
             for item in vaults:
-                print([item['name'], item['buy'], item['sell']])
+                print("Vault: "+str(item['name'])+' Buy: ' +str(item['buy'])+' Sell: '+str(item['sell']))
             time.sleep(1.5)
     else:
         print('=' * 50)
@@ -51,9 +51,7 @@ def content(html):
             'buy': vault.find('td', class_='c2').get_text(),
             'sell': vault.find('td', class_='c3').get_text(),
         })
-    lenght = len(vaults)
-    lenght = int(lenght/2)
-    return vaults[:lenght]
+    return vaults
 
 print("="*50)
 print("\t\t\tUAH course parser v2.0")
